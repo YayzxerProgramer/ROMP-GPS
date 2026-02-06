@@ -5,20 +5,6 @@ import TextType from "../reactbits/TextType.tsx";
 function App() {
   return (
     <>
-      <header>
-        <img src="" alt="" />
-        <h2>
-          <a href="">ROMP GPS</a>
-        </h2>
-        <nav>
-          <ul>
-            <li>Presentacion</li>
-            <li>Planes</li>
-            <li>Equipo</li>
-            <li>Contacto</li>
-          </ul>
-        </nav>
-      </header>
       <div className="inicio">
         <div style={{ width: "100%", height: "80vh", position: "relative" }}>
           <Gradient
