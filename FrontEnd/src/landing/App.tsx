@@ -25,9 +25,7 @@ function App() {
         <nav>
           <ul>
             <li>
-              <a onClick={() => scrollToSection("presentacion")}>
-                Presentación
-              </a>
+              <a onClick={() => scrollToSection("presentacion")}>Presentación</a>
             </li>
             <li>
               <a onClick={() => scrollToSection("planes")}>Planes</a>
@@ -297,7 +295,9 @@ function App() {
       <footer className="footer">
         <div className="container">
           <p>&copy; 2026 ROMP GPS. Todos los derechos reservados.</p>
-          <p>Hecho con ❤️ para los aventureros del terreno todoterreno.</p>
+          <p>
+            Hecho con ❤️ para los aventureros del terreno todoterreno.
+          </p>
         </div>
       </footer>
     </>
