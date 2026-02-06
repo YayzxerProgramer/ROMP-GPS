@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
+import './App.css'; // Assuming styles are kept in App.css
 
 const App = () => {
-    const [activeSection, setActiveSection] = useState('home');
+    const [activeSection, setActiveSection] = useState('');
 
-    const handleSectionChange = (section) => {
+    const handleSectionClick = (section) => {
         setActiveSection(section);
+        // Logic to scroll to the section goes here
     };
 
     return (
-        <div>
-            <nav>
+        <div className="app">
+            <nav className="navbar">
                 <ul>
-                    <li className={activeSection === 'home' ? 'active' : ''} onClick={() => handleSectionChange('home')}>Home</li>
-                    <li className={activeSection === 'about' ? 'active' : ''} onClick={() => handleSectionChange('about')}>About</li>
-                    <li className={activeSection === 'contact' ? 'active' : ''} onClick={() => handleSectionChange('contact')}>Contact</li>
+                    <li className={activeSection === 'home' ? 'active' : ''} onClick={() => handleSectionClick('home')}>Home</li>
+                    <li className={activeSection === 'about' ? 'active' : ''} onClick={() => handleSectionClick('about')}>About</li>
+                    <li className={activeSection === 'services' ? 'active' : ''} onClick={() => handleSectionClick('services')}>Services</li>
+                    <li className={activeSection === 'contact' ? 'active' : ''} onClick={() => handleSectionClick('contact')}>Contact</li>
                 </ul>
             </nav>
-            <section className="content">
-                {activeSection === 'home' && <h1>Welcome to Home</h1>}
-                {activeSection === 'about' && <h1>About Us</h1>}
-                {activeSection === 'contact' && <h1>Contact Us</h1>}
-            </section>
+            <section id="home"> {/* Home section */} </section>
+            <section id="about"> {/* About section */} </section>
+            <section id="services"> {/* Services section */} </section>
+            <section id="contact"> {/* Contact section */} </section>
         </div>
     );
 };
