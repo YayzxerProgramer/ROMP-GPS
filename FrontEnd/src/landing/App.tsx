@@ -1,51 +1,44 @@
-import "../App.css";
-import Gradient from "../reactbits/Gradient.tsx";
-import TextType from "../reactbits/TextType.tsx";
+import React from 'react';
+import './App.css';
 
 function App() {
   return (
-    <>
-      <div className="inicio">
-        <div style={{ width: "100%", height: "80vh", position: "relative" }}>
-          <Gradient
-            color1="#000000"
-            color2="#31ff03"
-            color3="#011801"
-            timeSpeed={0.25}
-            colorBalance={0}
-            warpStrength={1}
-            warpFrequency={5}
-            warpSpeed={2}
-            warpAmplitude={50}
-            blendAngle={0}
-            blendSoftness={0.05}
-            rotationAmount={500}
-            noiseScale={2}
-            grainAmount={0.1}
-            grainScale={2}
-            grainAnimated={false}
-            contrast={1.5}
-            gamma={1}
-            saturation={1}
-            centerX={0}
-            centerY={0}
-            zoom={0.9}
-          />
-          <div className="texto-inicio">
-            <TextType
-              text={["ROMP GPS", "Revolutionary Off-road Mapping Platform"]}
-              typingSpeed={100}
-              pauseDuration={1500}
-              showCursor
-              cursorCharacter="_"
-              deletingSpeed={50}
-              variableSpeed={{ min: 60, max: 120 }}
-              cursorBlinkDuration={0.5}
-            />
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="App">
+      <nav>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#presentacion">Presentación</a></li>
+          <li><a href="#planes">Planes</a></li>
+          <li><a href="#equipo">Equipo</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <section id="inicio">
+        <h1>Bienvenido a nuestra Aplicación</h1>
+        <p>Descripción breve de la aplicación.</p>
+      </section>
+
+      <section id="presentacion">
+        <h2>Presentación</h2>
+        <p>Detalles sobre la presentación de la aplicación y sus características.</p>
+      </section>
+
+      <section id="planes">
+        <h2>Planes</h2>
+        <p>Descripción de los diferentes planes o servicios ofrecidos.</p>
+      </section>
+
+      <section id="equipo">
+        <h2>Equipo</h2>
+        <p>Información sobre los miembros del equipo y sus roles.</p>
+      </section>
+
+      <section id="contacto">
+        <h2>Contacto</h2>
+        <p>Información de contacto y formulario de contacto.</p>
+      </section>
+    </div>
   );
 }
 
