@@ -1,10 +1,21 @@
 import "../App.css";
 import Gradient from "../reactbits/Gradient.tsx";
 import TextType from "../reactbits/TextType.tsx";
+import { Header } from "./Header.tsx";
+import GooeyNav from "../reactbits/GoovyNav.tsx";
 
 function App() {
+  const navItems = [
+    { label: "Presentación", href: "#presentacion" },
+    { label: "Planes", href: "#planes" },
+    { label: "Equipo", href: "#equipo" },
+    { label: "Contacto", href: "#contacto" },
+  ];
+
   return (
     <>
+      <Header />
+      <GooeyNav items={navItems} />
       <div className="inicio">
         <div style={{ width: "100%", height: "80vh", position: "relative" }}>
           <Gradient
