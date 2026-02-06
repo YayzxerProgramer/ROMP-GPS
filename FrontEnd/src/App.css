@@ -1,0 +1,53 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: rgb(0, 0, 0);
+    font-family: sans-serif;
+}
+
+
+header {
+    width: 100%;
+    background: rgb(0, 100, 0);
+    padding: 0px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inicio {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.texto-inicio {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.texto-inicio h1,
+.texto-inicio span,
+.texto-inicio div {
+  color: #ffffff;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  text-align: center;
+}
+
+.texto-inicio {
+  backdrop-filter: blur(2px);
+}
+
+.texto-inicio * {
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+}
+
+
