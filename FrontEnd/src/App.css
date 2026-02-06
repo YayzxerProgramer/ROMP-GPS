@@ -6,41 +6,41 @@
 }
 
 /* Estilos del Header */
-.main-header {
+header {
     width: 100%;
     background: rgb(0, 100, 0);
-    padding: 15px 40px;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 70px;
     position: relative;
     z-index: 100;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.header-logo img {
-    height: 40px;
-    width: auto;
+header h2,
+header h2 a,
+header nav ul li,
+header nav ul li a {
+    color: white !important;
 }
 
-.header-title {
+header h2 {
     margin: 0;
 }
 
-.header-title a {
-    color: white;
+header h2 a {
     text-decoration: none;
     font-size: 1.5rem;
     font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.header-title a:hover {
-    color: #31ff03;
     transition: color 0.3s ease;
 }
 
-.header-nav ul {
+header h2 a:hover {
+    color: #31ff03 !important;
+}
+
+header nav ul {
     display: flex;
     gap: 2rem;
     list-style: none;
@@ -48,20 +48,18 @@
     padding: 0;
 }
 
-.header-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
+header nav ul li {
+    cursor: pointer;
     transition: color 0.3s ease;
 }
 
-.header-nav ul li a:hover {
-    color: #31ff03;
+header nav ul li:hover {
+    color: #31ff03 !important;
 }
 
-/* Estilos para el GooeyNav debajo del header */
+/* Estilos para el GooeyNav */
 .gooey-nav-container {
-    background: rgba(0, 100, 0, 0.8);
+    background: rgba(0, 100, 0, 0.9);
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -69,35 +67,35 @@
 }
 
 .inicio {
-    width: 100%;
-    height: 100vh;
-    position: relative;
-    overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
 .texto-inicio {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .texto-inicio h1,
 .texto-inicio span,
 .texto-inicio div {
-    color: #ffffff;
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    font-weight: 700;
-    text-align: center;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  text-align: center;
 }
 
 .texto-inicio {
-    backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
 }
 
 .texto-inicio * {
-    text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
 }
