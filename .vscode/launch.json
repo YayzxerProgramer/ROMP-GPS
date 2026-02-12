@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ServidorTpcApplication<servidor-tpc>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.servidortpc.servidor_tpc.ServidorTpcApplication",
+            "projectName": "servidor-tpc",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
