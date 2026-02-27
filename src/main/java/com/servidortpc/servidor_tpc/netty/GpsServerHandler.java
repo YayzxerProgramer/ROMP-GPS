@@ -25,11 +25,12 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
             paquete.markReaderIndex();
 
-            byte start1 = paquete.readByte();
-            byte start2 = paquete.readByte();
+            byte primerByte = paquete.readByte();
+            byte segundoByte = paquete.readByte();
 
-            if (start1 != 0x78 || start2 != 0x78) {
-                // buscar siguiente posible inicio
+            if (primerByte != 0x78 || segundoByte != 0x78) {
+                paquete.resetReaderIndex();
+                paquete.readByte();
                 continue;
             }
 
@@ -108,7 +109,9 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
         int dia = paquete.readUnsignedByte();
         int hora = paquete.readUnsignedByte();
         int minuto = paquete.readUnsignedByte();
-        int segundo = paquete.readUnsignedByte();
+        int segundo = paquete.readUnsignedByte();    
+
+        paquete.readUnsignedByte();
 
         int latitudCruda = paquete.readInt();
         int longitudCruda = paquete.readInt();
