@@ -18,42 +18,51 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext contexto, ByteBuf paquete) throws Exception {
+
+        System.out.println("Datos recibidos: " + paquete.readableBytes() + " bytes");
+
         while (paquete.readableBytes() >= 5) {
-            // Esto guarda la posicion en la que lee los bytes
+
             paquete.markReaderIndex();
 
-            // Tomando bits iniciales (Especificamente el primero y el segundo)
-            byte primero = paquete.readByte();
-            byte segundo = paquete.readByte();
+            byte start1 = paquete.readByte();
+            byte start2 = paquete.readByte();
 
-            // Validando si el primer byte y el segundo es 0x78 y en el caso de que lo sea,
-            // eliminar la posicion leida
-            if (primero != 0x78 || segundo != 0x78) {
+            if (start1 != 0x78 || start2 != 0x78) {
+                // buscar siguiente posible inicio
                 continue;
             }
 
-            // Longitud
             int longitud = paquete.readUnsignedByte();
 
-            // Esperar hasta que el paquete completo llegue
             if (paquete.readableBytes() < longitud + 2) {
+                // paquete incompleto, volver atrás
                 paquete.resetReaderIndex();
                 return;
             }
 
-            // Protocolo (Aqui identificamos el protocolo en este caso 0x1 que es el estandar de GT06)
-            byte protocolo = paquete.readByte();
-            ByteBuf datosPaquete = paquete.readSlice(longitud - 1); // longitud - protocolo
-            paquete.skipBytes(2);
-            // Validacion
+            ByteBuf contenido = paquete.readSlice(longitud);
+
+            byte protocolo = contenido.readByte();
+
+            System.out.println("Protocolo recibido: " + String.format("%02X", protocolo));
+
             switch (protocolo) {
                 case 0x01 ->
-                    login(contexto, paquete);
+                    login(contexto, contenido);
                 case 0x12 ->
-                    ubicacion(datosPaquete);
+                    ubicacion(contenido);
+                case 0x13 ->
+                    heartbeat(contexto, contenido);
+            }
+
+            paquete.readUnsignedShort(); // CRC
+
+            if (paquete.readableBytes() >= 2) {
+                paquete.readByte(); // 0D
+                paquete.readByte(); // 0A
             }
         }
-
     }
 
     // Login
@@ -93,6 +102,7 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
     }
 
     private void ubicacion(ByteBuf paquete) {
+
         int year = 2000 + paquete.readUnsignedByte();
         int mes = paquete.readUnsignedByte();
         int dia = paquete.readUnsignedByte();
@@ -103,21 +113,51 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
         int latitudCruda = paquete.readInt();
         int longitudCruda = paquete.readInt();
 
-        double latitud = latitudCruda / 1_000_000.0;
-        double longitud = longitudCruda / 1_000_000.0;
-
         int velocidad = paquete.readUnsignedByte();
+        int courseStatus = paquete.readUnsignedShort();
 
-        int estadoMotor = paquete.readUnsignedShort();
+        // Conversión base
+        double latitud = latitudCruda / 1800000.0;
+        double longitud = longitudCruda / 1800000.0;
 
-        boolean accON = (estadoMotor & 0x2000) != 0;
-        boolean corteMotor = (estadoMotor & 0x1000) != 0;
-        boolean isValido = (estadoMotor & 0x0400) != 0;
+        // Bits importantes
+        boolean gpsValido = (courseStatus & 0x0400) != 0;
+        boolean oeste = (courseStatus & 0x0800) != 0;
+        boolean sur = (courseStatus & 0x1000) != 0;
+
+        // Aplicar signo correctamente
+        if (sur) {
+            latitud = -latitud;
+        }
+
+        if (oeste) {
+            longitud = -longitud;
+        }
 
         System.out.printf(
-                "Fecha: %04d-%02d-%02d %02d:%02d:%02d, Lat: %f, Lon: %f, Velocidad: %d km/h, ACC: %b, Corte: %b, GPS valido: %b\n",
-                year, mes, dia, hora, minuto, segundo, latitud, longitud, velocidad, accON, corteMotor, isValido
+                "Fecha: %04d-%02d-%02d %02d:%02d:%02d, Lat: %f, Lon: %f, Velocidad: %d km/h, GPS valido: %b\n",
+                year, mes, dia, hora, minuto, segundo,
+                latitud, longitud, velocidad, gpsValido
         );
+    }
+
+    private void heartbeat(ChannelHandlerContext contexto, ByteBuf contenido) {
+
+        // Leer información del heartbeat (depende del modelo)
+        byte estado = contenido.readByte();          // Terminal information
+        byte nivelGsm = contenido.readByte();       // Señal GSM
+
+        short serial = contenido.readShort();       // Número de serie
+
+        System.out.println("Heartbeat recibido");
+        System.out.println("Estado terminal: " + String.format("%02X", estado));
+        System.out.println("Señal GSM: " + nivelGsm);
+        System.out.println("Serial: " + String.format("%04X", serial));
+
+        // Construir ACK (mismo serial)
+        ByteBuf ack = GT06Utils.ACKHeartbeat(serial);
+
+        contexto.writeAndFlush(ack);
     }
 
     @Override

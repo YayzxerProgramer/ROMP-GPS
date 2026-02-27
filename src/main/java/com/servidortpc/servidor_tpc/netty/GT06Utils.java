@@ -61,4 +61,29 @@ public class GT06Utils {
         return paquete;
     }
 
+    public static ByteBuf ACKHeartbeat(short serial) {
+
+        ByteBuf buffer = Unpooled.buffer();
+
+        buffer.writeByte(0x78);
+        buffer.writeByte(0x78);
+
+        buffer.writeByte(0x05);      // longitud
+        buffer.writeByte(0x13);      // protocolo heartbeat
+
+        buffer.writeShort(serial);   // serial recibido
+
+        byte[] datos = new byte[buffer.readableBytes() - 2];
+        buffer.getBytes(2, datos);
+
+        int crc = calcularCRC(datos);
+
+        buffer.writeShort(crc);
+
+        buffer.writeByte(0x0D);
+        buffer.writeByte(0x0A);
+
+        return buffer;
+    }
+
 }
