@@ -12,7 +12,7 @@ import jakarta.annotation.PreDestroy;
 @Component
 public class ServerTcp {
 
-    int puerto = 9001;
+    int puerto = 9000;
 
     private EventLoopGroup aceptarConexiones;
     private EventLoopGroup procesaDatos;
