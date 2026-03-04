@@ -23,8 +23,8 @@ public class SendHTTP {
         this.backendUrl = backendUrl; 
     }
 
-    public void RecibeDatos(GPSData gpsData) {
-        String url = backendUrl + "/gpsdata"; // Se forma la URL completa para la petición POST.
+    public void EnviaDatos(GPSData gpsData) {
+        String url = backendUrl + "/gps/data"; // Se forma la URL completa para la petición POST.
         restTemplate.postForObject(url, gpsData, Void.class); // Se hace la petición POST al backend, enviando el objeto gpsData.
     }
     
