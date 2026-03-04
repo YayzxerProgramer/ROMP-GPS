@@ -12,7 +12,7 @@ import jakarta.annotation.PreDestroy;
 @Component
 public class ServerTcp {
 
-    int puerto = 9000;
+    int puerto = 9001;
 
     private EventLoopGroup aceptarConexiones;
     private EventLoopGroup procesaDatos;
@@ -26,17 +26,17 @@ public class ServerTcp {
         ServerBootstrap server = new ServerBootstrap();
 
         server
-            .group(aceptarConexiones, procesaDatos)
-            .channel(NioServerSocketChannel.class)
-            .childHandler(new GpsInitializer());
-        
+                .group(aceptarConexiones, procesaDatos)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new GpsInitializer());
+
         server.bind(puerto).sync();
 
         System.out.println("TCP GPS Server escuchando en puerto 9000");
     }
 
     @PreDestroy
-    public void cerrarServidor(){
+    public void cerrarServidor() {
         aceptarConexiones.shutdownGracefully();
         procesaDatos.shutdownGracefully();
     }
