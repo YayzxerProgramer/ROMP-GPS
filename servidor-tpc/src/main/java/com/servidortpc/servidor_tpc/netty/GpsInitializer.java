@@ -12,7 +12,7 @@ public class GpsInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel canal) throws Exception {
         ChannelPipeline flujo = canal.pipeline();
-        flujo.addLast(new GpsHandler());
+        flujo.addLast(new GpsServerHandler());
     }
-    
+
 }
