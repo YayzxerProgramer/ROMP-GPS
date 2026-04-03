@@ -29,7 +29,7 @@ public class GPSDataService {
      * Guarda un nuevo registro GPS en MongoDB e invalida la caché
      */
     public GPSDataEntity save(GPSData gpsData) {
-        GPSDataEntity entity = GPSDataEntity.from(gpsData);
+        GPSDataEntity entity = GPSDataEntity.from();
         GPSDataEntity saved = repository.save(entity);
 
         // Invalidar caché de última posición para este IMEI
@@ -58,43 +58,9 @@ public class GPSDataService {
         Optional<GPSDataEntity> result = repository.findFirstByImeiOrderByTimestampDesc(imei);
 
         // Guardar en caché si existe
-        result.ifPresent(entity ->
-            redisTemplate.opsForValue().set(cacheKey, entity, 5, TimeUnit.MINUTES)
-        );
+        result.ifPresent(entity -> redisTemplate.opsForValue().set(cacheKey, entity, 5, TimeUnit.MINUTES));
 
         return result;
-    }
-
-    /**
-     * Obtiene el histórico de posiciones para un dispositivo en un rango de fechas
-     */
-    public List<GPSDataEntity> getHistory(String imei, LocalDateTime start, LocalDateTime end) {
-        String cacheKey = HISTORY_KEY + imei + ":" + start.toString() + ":" + end.toString();
-
-        // Intentar obtener de caché
-        Object cached = redisTemplate.opsForValue().get(cacheKey);
-        if (cached instanceof List) {
-            log.debug("Cache hit for history: {} ({} to {})", imei, start, end);
-            return (List<GPSDataEntity>) cached;
-        }
-
-        // Si no está en caché, buscar en MongoDB
-        log.debug("Cache miss for history, querying MongoDB");
-        List<GPSDataEntity> result = repository.findByImeiAndCreatedAtBetweenOrderByCreatedAtDesc(imei, start, end);
-
-        // Guardar en caché por 10 minutos
-        if (!result.isEmpty()) {
-            redisTemplate.opsForValue().set(cacheKey, result, 10, TimeUnit.MINUTES);
-        }
-
-        return result;
-    }
-
-    /**
-     * Obtiene las últimas 100 posiciones de un dispositivo
-     */
-    public List<GPSDataEntity> getLast100Positions(String imei) {
-        return repository.findTop100ByImeiOrderByCreatedAtDesc(imei);
     }
 
     /**
@@ -102,13 +68,6 @@ public class GPSDataService {
      */
     public boolean existsByImei(String imei) {
         return repository.existsByImei(imei);
-    }
-
-    /**
-     * Cuenta el número de registros para un IMEI
-     */
-    public long countByImei(String imei) {
-        return repository.countByImei(imei);
     }
 
     /**

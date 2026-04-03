@@ -7,8 +7,8 @@ services:
     container_name: rompgps-postgres
     environment:
       POSTGRES_DB: rompgps_users
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rompgps2026}
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -44,7 +44,7 @@ services:
 
   # Redis - Caché
   redis:
-    image: redis:7-alpine
+    image: redis:latest
     container_name: rompgps-redis
     ports:
       - "6379:6379"
