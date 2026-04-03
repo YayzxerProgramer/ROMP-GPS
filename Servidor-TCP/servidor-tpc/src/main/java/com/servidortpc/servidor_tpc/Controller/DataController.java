@@ -1,40 +1,32 @@
 package com.servidortpc.servidor_tpc.Controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.servidortpc.servidor_tpc.Model.GPSData;
-import com.servidortpc.servidor_tpc.Service.GpsDataService;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/data/ubicacion")
 public class DataController {
 
-    private final GpsDataService gpsDataService;
+    private final RestTemplate restTemplate;
+    private static final String BACKEND_URL = "http://localhost:8081/api/gps/last";
 
-    public DataController(GpsDataService gpsDataService) {
-        this.gpsDataService = gpsDataService;
+    public DataController(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> receive(@RequestBody GPSData gpsData) {
-        gpsDataService.recibirData(gpsData);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/last")
+    public ResponseEntity<GPSData> getUltimoDato() {
+        try {
+            GPSData dato = restTemplate.getForObject(BACKEND_URL, GPSData.class);
+            return dato != null ? ResponseEntity.ok(dato) : ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
-    @GetMapping
-    public ResponseEntity<List<GPSData>> getAll() {
-        List<GPSData> datos = gpsDataService.obtenerDatos();
-        return ResponseEntity.ok(datos);
-    }
-
 
 }

@@ -1,8 +1,11 @@
 package com.servidortpc.servidor_tpc.netty;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.servidortpc.servidor_tpc.Model.GPSData;
+import com.servidortpc.servidor_tpc.Service.GpsDataService;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -13,6 +16,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @ChannelHandler.Sharable
 public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
+    private final GpsDataService gpsDataService;
+    private final RestTemplate restTemplate;
+    private static final String BACKEND_URL = "http://localhost:8081/api/gps";
+
+    public GpsServerHandler(GpsDataService gpsDataService, RestTemplate restTemplate) {
+        this.gpsDataService = gpsDataService;
+        this.restTemplate = restTemplate;
+    }
 
     private boolean accOn = false;
     private final boolean corteMotor = false;
@@ -96,7 +107,7 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 latitud, longitud, velocidad, gpsValido
         );
 
-        String tiempo = "Año: " + year + " Mes: " + mes + 
+        String tiempo = "Año: " + year + " Mes: " + mes +
         " Dia: " + dia + " Hora: " + hora + " Minuto: " + minuto + " Segundo:" + segundo;
 
         GPSData gps = new GPSData(
@@ -109,7 +120,20 @@ public class GpsServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
                 accOn,
                 corteMotor
         );
-        
+
+        // Guardar en memoria local
+        gpsDataService.recibirData(gps);
+
+        // Enviar al backend para que guarde en MongoDB
+        try {
+            ResponseEntity<Void> response = restTemplate.postForEntity(BACKEND_URL, gps, Void.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("Datos enviados al backend correctamente");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al enviar datos al backend: " + e.getMessage());
+        }
+
     }
 
     private void heartbeat(ChannelHandlerContext contexto, ByteBuf contenido) {

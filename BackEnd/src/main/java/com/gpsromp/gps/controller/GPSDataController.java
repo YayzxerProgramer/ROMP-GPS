@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.Optional;
 
 @RestController
@@ -25,17 +24,17 @@ public class GPSDataController {
      */
     @PostMapping
     public ResponseEntity<GPSDataEntity> saveGPSData(@RequestBody GPSData gpsData) {
-        log.info("Received GPS data for IMEI: {}", gpsData.getImei());
+        log.info("Received GPS data");
         GPSDataEntity saved = gpsDataService.save(gpsData);
         return ResponseEntity.ok(saved);
     }
 
     /**
-     * Obtiene la última posición de un dispositivo por IMEI
+     * Obtiene la última posición del GPS
      */
-    @GetMapping("/last/{imei}")
-    public ResponseEntity<GPSDataEntity> getLastPosition(@PathVariable String imei) {
-        Optional<GPSDataEntity> result = gpsDataService.getLastPosition(imei);
+    @GetMapping("/last")
+    public ResponseEntity<GPSDataEntity> getLastPosition() {
+        Optional<GPSDataEntity> result = gpsDataService.getLastPosition();
         return result.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

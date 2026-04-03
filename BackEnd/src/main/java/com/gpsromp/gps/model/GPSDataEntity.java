@@ -18,9 +18,6 @@ public class GPSDataEntity {
     @Id
     private String id;
 
-    @Indexed
-    private String imei;
-
     private String timestamp;
 
     private double latitud;
