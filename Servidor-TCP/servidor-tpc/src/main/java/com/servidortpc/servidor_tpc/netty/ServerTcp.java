@@ -15,6 +15,8 @@ import jakarta.annotation.PreDestroy;
 public class ServerTcp {
 
     private final GpsInitializer gpsInitializer;
+    private EventLoopGroup aceptarConexiones;
+    private EventLoopGroup procesaDatos;
     private final GpsDataService gpsDataService;
     private final RestTemplate restTemplate;
 
@@ -27,8 +29,8 @@ public class ServerTcp {
     @SuppressWarnings("deprecation")
     @PostConstruct
     public void iniciarServidor() throws Exception {
-        EventLoopGroup aceptarConexiones = new NioEventLoopGroup(1);
-        EventLoopGroup procesaDatos = new NioEventLoopGroup();
+        aceptarConexiones = new NioEventLoopGroup(1);
+        procesaDatos = new NioEventLoopGroup();
 
         ServerBootstrap server = new ServerBootstrap();
 
